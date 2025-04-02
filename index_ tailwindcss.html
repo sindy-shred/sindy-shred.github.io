@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINDy-SHRED - Spatiotemporal Modeling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'airbnb': {
+                            'red': '#FF385C',
+                            'dark': '#222222',
+                            'light': '#717171',
+                            'gray': '#F7F7F7',
+                            'white': '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Circular', '-apple-system', 'BlinkMacSystemFont', 'Roboto', 'Helvetica Neue', 'sans-serif'],
+                        'mono': ['Noto Sans Mono', 'monospace']
+                    },
+                    maxWidth: {
+                        'desktop': '960px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+        
+        .hero-gradient {
+            background: linear-gradient(to right, #FF385C, #FF385C);
+        }
+        
+        .card-hover {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.02);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #FF385C;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .results-tab {
+            transition: all 0.3s ease;
+        }
+        
+        .results-tab.active {
+            border-bottom: 2px solid #FF385C;
+            color: #FF385C;
+        }
+        
+        .publication-card {
+            transition: all 0.3s ease;
+        }
+        
+        .publication-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Code block styling */
+        pre {
+            background-color: #1e1e1e;
+            color: #f8f8f8;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        code {
+            color: #ff79c6;
+            background-color: #1e1e1e;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Noto Sans Mono', monospace;
+        }
+        
+        /* Video container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Content width */
+        .content-width {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        
+        /* Dark mode styles */
+        .dark-mode {
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        
+        .dark-mode .bg-white {
+            background-color: #1E1E1E;
+        }
+        
+        .dark-mode .text-gray-800 {
+            color: #E0E0E0;
+        }
+        
+        .dark-mode .border-gray-200 {
+            border-color: #333333;
+        }
+        
+        .dark-mode pre {
+            background-color: #1e1e1e;
+            color: #f8f8f8;
+        }
+        
+        .dark-mode code {
+            color: #ff79c6;
+            background-color: #1e1e1e;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white shadow-sm z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-airbnb-red">SINDy-SHRED</a>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <a href="#overview" class="nav-link text-gray-600 hover:text-airbnb-red">Overview</a>
+                    <a href="#results" class="nav-link text-gray-600 hover:text-airbnb-red">Results</a>
+                    <a href="#installation" class="nav-link text-gray-600 hover:text-airbnb-red">Installation</a>
+                    <a href="#usage" class="nav-link text-gray-600 hover:text-airbnb-red">Usage</a>
+                    <a href="#citation" class="nav-link text-gray-600 hover:text-airbnb-red">Citation</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                    Sparse identification of nonlinear dynamics and Koopman operators with Shallow Recurrent Decoder Networks
+                </h1>
+                <h2 class="text-2xl text-gray-600 mb-8">SINDy-SHRED</h2>
+                <div class="flex justify-center space-x-4 mb-8">
+                    <a href="https://arxiv.org/pdf/2501.13329" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-airbnb-red hover:bg-red-600">
+                        <i class="fas fa-file-pdf mr-2"></i> Paper
+                    </a>
+                    <a href="https://github.com/gaoliyao/sindy-shred" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fab fa-github mr-2"></i> Code
+                    </a>
+                    <a href="https://colab.research.google.com/drive/1Xxw3P_x9a8iKZ6RPe2ZfTb8rJoWtPwTK?usp=sharing" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fab fa-google mr-2"></i> Colab
+                    </a>
+                </div>
+                <div class="text-gray-600">
+                    <span class="font-medium">Mars Liyao Gao</span>,
+                    <span class="font-medium">Jan P. Williams</span>,
+                    <span class="font-medium">J. Nathan Kutz</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TL;DR Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">TL;DR</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    We introduce SINDy-SHRED, a method for spatiotemporal modeling of real-world data that integrates sensing and model identification using a shallow recurrent decoder network. Our approach achieves state-of-the-art performance in various applications, including synthetic PDE data modeling, Sea Surface Temperature (SST) prediction, and long-term video forecasting, while requiring minimal hyperparameter tuning.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <p class="text-gray-600 leading-relaxed">
+                        SINDy-SHRED is a method for spatiotemporal modeling of real-world data that integrates sensing and model identification using a shallow recurrent decoder network. It efficiently reconstructs the full spatiotemporal field from a few sensor measurements while enforcing interpretable latent space dynamics.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="feature-card bg-gray-50 p-4 rounded-lg">
+                            <i class="fas fa-check text-airbnb-red mb-2"></i>
+                            <h3 class="font-semibold text-gray-900">SINDy Regularization</h3>
+                            <p class="text-sm text-gray-600">Ensures interpretable dynamics</p>
+                        </div>
+                        <div class="feature-card bg-gray-50 p-4 rounded-lg">
+                            <i class="fas fa-check text-airbnb-red mb-2"></i>
+                            <h3 class="font-semibold text-gray-900">GRU Architecture</h3>
+                            <p class="text-sm text-gray-600">Processes sequential data</p>
+                        </div>
+                        <div class="feature-card bg-gray-50 p-4 rounded-lg">
+                            <i class="fas fa-check text-airbnb-red mb-2"></i>
+                            <h3 class="font-semibold text-gray-900">Shallow Decoder</h3>
+                            <p class="text-sm text-gray-600">Efficient reconstruction</p>
+                        </div>
+                        <div class="feature-card bg-gray-50 p-4 rounded-lg">
+                            <i class="fas fa-check text-airbnb-red mb-2"></i>
+                            <h3 class="font-semibold text-gray-900">Koopman Variant</h3>
+                            <p class="text-sm text-gray-600">Linear representation</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="https://github.com/user-attachments/assets/4b37563a-f6cc-49e5-8bd9-44842b70959f" 
+                         alt="SINDy-SHRED Overview" 
+                         class="rounded-lg shadow-lg">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Results & Benchmarks</h2>
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="flex space-x-4 mb-8">
+                    <button class="results-tab active px-4 py-2 text-gray-600 hover:text-airbnb-red" data-tab="sst">SST Prediction</button>
+                    <button class="results-tab px-4 py-2 text-gray-600 hover:text-airbnb-red" data-tab="video">Video Forecasting</button>
+                    <button class="results-tab px-4 py-2 text-gray-600 hover:text-airbnb-red" data-tab="benchmark">Benchmark Comparison</button>
+                </div>
+                
+                <div id="sst-results" class="tab-content">
+                    <img src="https://github.com/user-attachments/assets/ecb0bedc-ab58-46f5-81d5-51a2cc31e575" 
+                         alt="SST Data Example" 
+                         class="w-full rounded-lg shadow-lg mb-6">
+                    <p class="text-gray-600">
+                        Our model achieves outstanding performance in predicting Sea Surface Temperature patterns, capturing both short-term fluctuations and long-term trends with remarkable accuracy.
+                    </p>
+                </div>
+                
+                <div id="video-results" class="tab-content hidden">
+                    <img src="https://github.com/user-attachments/assets/65e4260d-2723-4de1-ae9c-d95212cad939" 
+                         alt="Pendulum Example" 
+                         class="w-full rounded-lg shadow-lg mb-6">
+                    <p class="text-gray-600">
+                        SINDy-SHRED accurately predicts complex motion patterns in video sequences, maintaining physical consistency even over extended prediction horizons.
+                    </p>
+                </div>
+                
+                <div id="benchmark-results" class="tab-content hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SST Prediction (RMSE ↓)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Video Forecasting (SSIM ↑)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Training Time (hours ↓)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="bg-airbnb-red bg-opacity-5">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SINDy-SHRED (Ours)</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.124</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.942</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.3</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Convolutional LSTM</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.189</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.887</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5.7</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">PredRNN</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.163</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0.901</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6.2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Installation</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 rounded-lg shadow-lg p-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Dependencies</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-airbnb-red mr-2"></i>
+                            Python 3.8+
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-airbnb-red mr-2"></i>
+                            PyTorch
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-airbnb-red mr-2"></i>
+                            NumPy
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-airbnb-red mr-2"></i>
+                            SciPy
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-airbnb-red mr-2"></i>
+                            Matplotlib
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-airbnb-red mr-2"></i>
+                            scikit-learn
+                        </li>
+                    </ul>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-gray-50 rounded-lg shadow-lg p-8">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Quick Start in Google Colab</h3>
+                        <p class="text-gray-600 mb-4">We strongly encourage you to explore SINDy-SHRED by directly running our Colab notebook:</p>
+                        <a href="https://colab.research.google.com/drive/1Xxw3P_x9a8iKZ6RPe2ZfTb8rJoWtPwTK?usp=sharing" 
+                           class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-airbnb-red hover:bg-red-600">
+                            <i class="fab fa-google mr-2"></i> Open in Colab
+                        </a>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg shadow-lg p-8">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Dataset</h3>
+                        <p class="text-gray-600 mb-4">Please download the dataset and place it into the Data/ folder:</p>
+                        <a href="https://drive.google.com/file/d/1IrKFsYEcUL8xxZ0PUSLC3VrpTvVneDhj/view?usp=sharing" 
+                           class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <i class="fas fa-download mr-2"></i> Download Dataset
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Section -->
+    <section id="usage" class="py-16 bg-gray-50">
+        <div class="max-w-desktop mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Usage</h2>
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Video Tutorial</h3>
+                    <div class="video-container">
+                        <iframe 
+                            src="https://www.youtube.com/embed/UYDfWJxvKGw" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <p class="text-gray-500 text-sm text-center mt-2">Watch our tutorial video to learn how to use SINDy-SHRED</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Basic Usage</h3>
+                        <pre class="p-4">
+                            <code>
+import sindy_shred
+
+# Initialize and train the SINDy-SHRED model
+shred = sindy_shred.SINDy_SHRED(
+    num_sensors=20, 
+    latent_dim=10, 
+    hidden_size=3, 
+    hidden_layers=2
+)
+
+validation_errors = sindy_shred.fit(
+    shred, 
+    train_dataset, 
+    valid_dataset, 
+    batch_size=128, 
+    num_epochs=600, 
+    lr=1e-3
+)
+                            </code>
+                        </pre>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Advanced Options</h3>
+                        <pre class="p-4">
+                            <code>
+import sindy_shred
+
+library_dim = sindy_shred.library_size(latent_dim, poly_order=3, include_sine=True, include_const=True)
+
+# Initialize and train the SINDy-SHRED model with advanced options
+shred = sindy_shred.SINDy_SHRED(
+    num_sensors=20, 
+    latent_dim=10, 
+    hidden_size=3, 
+    hidden_layers=2, 
+    l1=350, 
+    l2=400, 
+    dropout=0.1, 
+    library_dim=library_dim, 
+    poly_order=3, 
+    include_sine=True, 
+    dt=1/52.0*0.1, 
+    layer_norm=False
+)
+
+validation_errors = sindy_shred.fit(
+    shred, 
+    train_dataset, 
+    valid_dataset, 
+    batch_size=128, 
+    num_epochs=600, 
+    lr=1e-3, 
+    verbose=True, 
+    threshold=0.25, 
+    patience=5, 
+    sindy_regularization=10.0, 
+    optimizer="Lion", 
+    thres_epoch=100
+)
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation Section -->
+    <section id="citation" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Citation</h2>
+            <div class="bg-gray-50 rounded-lg shadow-lg p-8">
+                <p class="text-gray-600 mb-4">If you find SINDy-SHRED useful in your research, please cite:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto">
+                    <code>
+@misc{gao2025sparse,
+    title={Sparse identification of nonlinear dynamics and Koopman operators with Shallow Recurrent Decoder Networks}, 
+    author={Mars Liyao Gao and Jan P. Williams and J. Nathan Kutz},
+    year={2025},
+    eprint={2501.13329},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG},
+    url={https://arxiv.org/abs/2501.13329}, 
+}
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-gray-400">
+                    This website is licensed under 
+                    <a href="http://creativecommons.org/licenses/by-sa/4.0/" class="text-airbnb-red hover:text-red-400">
+                        CC BY-SA 4.0
+                    </a>.
+                    You are free to borrow the source code of this website, we just ask that you link back to this page in the footer.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality
+        const tabs = document.querySelectorAll('.results-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const targetId = tab.dataset.tab + '-results';
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                    if (content.id === targetId) {
+                        content.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        });
+        
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-500', 'opacity-0', 'translate-y-4');
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html> 

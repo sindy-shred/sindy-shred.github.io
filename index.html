@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Sparse identification of nonlinear dynamics and Koopman operators with Shallow Recurrent Decoder Networks">
+  <meta name="keywords" content="sindy-shred, nonlinear dynamics, machine learning, deep learning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sparse identification of nonlinear dynamics and Koopman operators with Shallow Recurrent Decoder Networks</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="icon" href="https://www.svgrepo.com/show/396934/lollipop.svg">
+  
+  <style>
+    .hero {
+      background-color: #ffffff;
+      padding: 3rem 1.5rem;
+    }
+    .hero .title {
+      color: #000000;
+    }
+    .hero .subtitle {
+      color: #333333;
+    }
+    .publication-authors {
+      color: #424242;
+    }
+    .publication-authors a {
+      color: #0056b3;
+    }
+    .publication-authors a:hover {
+      color: #003d82;
+    }
+    .section {
+      background-color: #fafafa;
+    }
+    .section:nth-child(even) {
+      background-color: #ffffff;
+    }
+    .title {
+      color: #000000;
+    }
+    .subtitle {
+      color: #333333;
+    }
+    .button.is-primary {
+      background-color: #0056b3;
+    }
+    .button.is-primary:hover {
+      background-color: #003d82;
+    }
+    .button.is-success {
+      background-color: #28a745;
+    }
+    .button.is-success:hover {
+      background-color: #1e7e34;
+    }
+    .footer {
+      background-color: #333333;
+      color: white;
+    }
+    .footer a {
+      color: #90caf9;
+    }
+    .footer a:hover {
+      color: #bbdefb;
+    }
+    pre {
+      background-color: #f5f5f5;
+      color: #333333;
+    }
+    code {
+      color: #d63384;
+      background-color: #f5f5f5;
+    }
+    .content ul li {
+      color: #424242;
+    }
+    .fas.fa-check {
+      color: #28a745;
+    }
+    
+    /* Interactive elements */
+    .card {
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      margin-bottom: 1.5rem;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    /* Larger images for results */
+    .results-figure {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    
+    /* Animation for key features */
+    .feature-item {
+      transition: background-color 0.3s ease;
+      padding: 0.75rem;
+      border-radius: 4px;
+    }
+    .feature-item:hover {
+      background-color: #f0f7ff;
+    }
+    
+    /* Interactive tabs */
+    .tabs-content .tab-content {
+      display: none;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 0 0 4px 4px;
+    }
+    .tabs-content .tab-content.is-active {
+      display: block;
+    }
+    
+    /* Improved code block */
+    pre {
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    /* Video container */
+    .video-container {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 600px;
+      width: 80%;
+      margin: 0 auto;
+    }
+    .video-container iframe {
+      max-width: 100%;
+    }
+    
+    /* Tooltips */
+    .has-tooltip {
+      position: relative;
+      cursor: help;
+    }
+    .tooltip-text {
+      visibility: hidden;
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 5px 10px;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .has-tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #0056b3;
+      color: white;
+      text-align: center;
+      line-height: 50px;
+      z-index: 999;
+      transition: background-color 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .back-to-top:hover {
+      background: #003d82;
+    }
+    .back-to-top.show {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Accordion/FAQ */
+    .accordion-header {
+      cursor: pointer;
+      padding: 1rem;
+      border-radius: 4px;
+      background-color: #f5f5f5;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .accordion-header:hover {
+      background-color: #e8e8e8;
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding: 0 1rem;
+    }
+    .accordion-content.show {
+      max-height: 500px;
+    }
+    
+    /* Interactive architecture diagram */
+    .architecture-diagram {
+      position: relative;
+      width: 100%;
+      margin: 3rem auto;
+      max-width: 2400px;
+    }
+    .architecture-diagram .image {
+      width: 100%;
+      max-width: 2400px;
+      margin: 0 auto;
+    }
+    .architecture-diagram img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .architecture-diagram figcaption {
+      font-size: 1.3rem;
+      margin-top: 2rem;
+    }
+    .hotspot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(255, 0, 0, 0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .hotspot:hover {
+      transform: scale(1.2);
+      background-color: rgba(255, 0, 0, 0.8);
+    }
+    .hotspot-info {
+      position: absolute;
+      background-color: white;
+      color: #333;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 10;
+      width: 200px;
+    }
+    
+    /* Publications showcase */
+    .publication-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .publication-card .card-image {
+      overflow: hidden;
+    }
+    .publication-card .card-image img {
+      transition: transform 0.3s;
+    }
+    .publication-card:hover .card-image img {
+      transform: scale(1.05);
+    }
+    .publication-card .card-footer-item {
+      transition: background-color 0.3s;
+    }
+    .publication-card .card-footer-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* Publication links animation */
+    .publication-links .button {
+      transition: all 0.3s ease;
+      margin: 0 0.5rem;
+    }
+    .publication-links .button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .publication-links .button.is-dark {
+      background-color: #363636;
+    }
+    .publication-links .button.is-dark:hover {
+      background-color: #0056b3;
+    }
+    .publication-links .button .icon {
+      transition: transform 0.3s ease;
+    }
+    .publication-links .button:hover .icon {
+      transform: scale(1.2);
+    }
+
+    /* Custom container width */
+    .container.is-max-desktop {
+      max-width: 1200px !important;  /* Increased from default 960px */
+    }
+    .column.is-four-fifths {
+      width: 90% !important;  /* Increased from default 80% */
+    }
+
+    .faq-container {
+      margin-top: 2rem;
+    }
+    
+    .accordion-item {
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .accordion-item:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      padding: 1.25rem;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .accordion-header:hover {
+      background-color: #f0f2f5;
+    }
+    
+    .accordion-icon {
+      margin-right: 1rem;
+      color: #0056b3;
+      font-size: 1.2rem;
+    }
+    
+    .accordion-title {
+      flex-grow: 1;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .accordion-arrow {
+      color: #0056b3;
+      transition: transform 0.3s ease;
+    }
+    
+    .accordion-item.is-active .accordion-arrow {
+      transform: rotate(180deg);
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .accordion-body {
+      padding: 1.25rem;
+      background-color: white;
+    }
+    
+    .faq-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 1rem;
+    }
+    
+    .faq-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      color: #2c3e50;
+    }
+    
+    .faq-list li i {
+      color: #28a745;
+      margin-right: 0.75rem;
+    }
+    
+    .accordion-item.is-active .accordion-content {
+      max-height: 500px;
+    }
+  </style>
+</head>
+<body>
+<!-- Back to top button -->
+<a href="#" class="back-to-top">
+  <i class="fas fa-arrow-up"></i>
+</a>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Sparse identification of nonlinear dynamics and Koopman operators with Shallow Recurrent Decoder Networks</h1>
+          <h2 class="subtitle is-4">SINDy-SHRED</h2>
+          
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://github.com/gaoliyao">Mars Liyao Gao</a>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=nBejYwwAAAAJ&hl=en">Jan P. Williams</a>,</span>
+            <span class="author-block"><a href="https://faculty.washington.edu/kutz/">J. Nathan Kutz</a></span>
+          </div>
+          <div class="is-size-5 publication-authors mt-2">
+            <span class="author-block">University of Washington</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="https://arxiv.org/pdf/2501.13329" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://arxiv.org/abs/2501.13329" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="ai ai-arxiv"></i></span>
+                <span>arXiv</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://github.com/gaoliyao/sindy-shred" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://colab.research.google.com/drive/1Xxw3P_x9a8iKZ6RPe2ZfTb8rJoWtPwTK?usp=sharing" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-google"></i></span>
+                <span>Colab</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="overview">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-four-fifths">
+        <div class="content">
+          <h2 class="title">Overview</h2>
+          
+          <div class="architecture-diagram">
+            <figure class="image mb-6">
+              <img src="imgs/fig1.png" alt="SINDy-SHRED Overview">
+              <figcaption class="has-text-centered">(a) SINDy-SHRED and Koopman-SHRED architecture showing sparse sensor signal (red) to interpretable latent representation (purple). (b) Three-component loss function: SHRED reconstruction, Ensemble SINDy dynamics, and sparsity constraint. (c) Globally convex loss landscape visualization.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tldr">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-four-fifths">
+        <div class="content is-size-5">
+          <em><strong>TL;DR:</strong> We introduce SINDy-SHRED, a method for spatiotemporal modeling of real-world data that integrates sensing and model identification using a shallow recurrent decoder network. Our approach achieves state-of-the-art performance in various applications, including synthetic PDE data modeling, Sea Surface Temperature (SST) prediction, and long-term video forecasting, while requiring minimal hyperparameter tuning.</em>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-four-fifths">
+        <div class="content">
+          <h2 class="title">Results & Benchmarks</h2>
+          
+          <div class="tabs is-centered">
+            <ul>
+              <li class="is-active" data-target="#sst-results"><a>SST Prediction</a></li>
+              <li data-target="#video-results"><a>Video Forecasting</a></li>
+              <li data-target="#cylinder-results"><a>Flow over Cylinder</a></li>
+              <li data-target="#turbulent-results"><a>Turbulent Flow</a></li>
+              <li data-target="#loss-landscape"><a>Loss Landscape</a></li>
+              <li data-target="#benchmark-table"><a>Benchmark Comparison</a></li>
+            </ul>
+          </div>
+          
+          <div class="tabs-content">
+            <div id="sst-results" class="tab-content is-active">
+              <figure class="image results-figure">
+                <img src="https://github.com/user-attachments/assets/ecb0bedc-ab58-46f5-81d5-51a2cc31e575" alt="SST Data Example">
+                <figcaption class="has-text-centered">Real-World Sea Surface Temperature (SST) Prediction Results</figcaption>
+              </figure>
+              <p>Our model achieves outstanding performance in predicting Sea Surface Temperature patterns, capturing both short-term fluctuations and long-term trends with remarkable accuracy.</p>
+            </div>
+            
+            <div id="video-results" class="tab-content">
+              <figure class="image results-figure">
+                <img src="https://github.com/user-attachments/assets/65e4260d-2723-4de1-ae9c-d95212cad939" alt="Pendulum Example">
+                <figcaption class="has-text-centered">Video Prediction Results on Pendulum Dataset</figcaption>
+              </figure>
+              <p>SINDy-SHRED accurately predicts complex motion patterns in video sequences, maintaining physical consistency even over extended prediction horizons.</p>
+            </div>
+
+            <div id="cylinder-results" class="tab-content">
+              <figure class="image results-figure">
+                <img src="https://github.com/user-attachments/assets/f719b85e-c0cf-4f95-a195-fb331e3819b2" alt="Flow over Cylinder Example">
+                <figcaption class="has-text-centered">Flow over a Cylinder Example</figcaption>
+              </figure>
+              <p>SINDy-SHRED demonstrates exceptional performance in capturing the complex vortex shedding patterns and flow dynamics around a cylinder, showcasing its ability to model fluid dynamics phenomena.</p>
+            </div>
+
+            <div id="turbulent-results" class="tab-content">
+              <figure class="image results-figure">
+                <img src="https://github.com/user-attachments/assets/c745884b-99c0-40e7-821a-86f4ebd0d34a" alt="Isotropic Turbulent Flow Example">
+                <figcaption class="has-text-centered">Isotropic Turbulent Flow Example</figcaption>
+              </figure>
+              <p>Our model successfully captures the intricate structures and energy cascade in isotropic turbulent flow, demonstrating its capability to handle complex turbulent dynamics.</p>
+            </div>
+
+            <div id="loss-landscape" class="tab-content">
+              <figure class="image results-figure">
+                <img src="https://github.com/user-attachments/assets/0d81d984-4f0a-4144-b87b-c94b7d969a67" alt="Loss Landscape Visualization">
+                <figcaption class="has-text-centered">Visualizing the Loss Landscape</figcaption>
+              </figure>
+              <p>The loss landscape visualization reveals the globally convex nature of our optimization problem, explaining the model's robust convergence and stability during training.</p>
+            </div>
+            
+            <div id="benchmark-table" class="tab-content">
+              <div class="table-container">
+                <table class="table is-striped is-hoverable is-fullwidth">
+                  <thead>
+                    <tr>
+                      <th>Models</th>
+                      <th>Params</th>
+                      <th>Training time</th>
+                      <th>T=[0,100]</th>
+                      <th>T=[100,200]</th>
+                      <th>T=[200,275]</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ResNet</td>
+                      <td>2.7M</td>
+                      <td>24 mins</td>
+                      <td>2.08×10⁻²</td>
+                      <td>1.88×10⁻²</td>
+                      <td>2.05×10⁻²</td>
+                      <td>2.00×10⁻²</td>
+                    </tr>
+                    <tr>
+                      <td>SimVP</td>
+                      <td>460K</td>
+                      <td>30 mins</td>
+                      <td>2.29×10⁻²</td>
+                      <td>2.47×10⁻²</td>
+                      <td>2.83×10⁻²</td>
+                      <td>2.53×10⁻²</td>
+                    </tr>
+                    <tr>
+                      <td>PredRNN</td>
+                      <td>444K</td>
+                      <td>178 mins</td>
+                      <td>1.02×10⁻²</td>
+                      <td>1.79×10⁻²</td>
+                      <td>1.69×10⁻²</td>
+                      <td>1.48×10⁻²</td>
+                    </tr>
+                    <tr>
+                      <td>ConvLSTM</td>
+                      <td>260K</td>
+                      <td>100 mins</td>
+                      <td>9.24×10⁻³</td>
+                      <td>1.86×10⁻²</td>
+                      <td>1.99×10⁻²</td>
+                      <td>1.55×10⁻²</td>
+                    </tr>
+                    <tr class="is-selected">
+                      <td><strong>SINDy-SHRED*</strong></td>
+                      <td><strong>44K</strong></td>
+                      <td><strong>17 mins</strong></td>
+                      <td>1.70×10⁻²</td>
+                      <td>9.36×10⁻³</td>
+                      <td>5.31×10⁻³</td>
+                      <td>1.05×10⁻²</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="installation">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-four-fifths">
+        <div class="content">
+          <h2 class="title">Installation</h2>
+          
+          <div class="columns is-multiline">
+            <div class="column is-6">
+              <div class="box">
+                <h3 class="subtitle mb-4">
+                  <span class="icon-text">
+                    <span class="icon">
+                      <i class="fas fa-cogs"></i>
+                    </span>
+                    <span>Dependencies</span>
+                  </span>
+                </h3>
+                <div class="content">
+                  <div class="tags are-medium">
+                    <span class="tag is-primary">Python 3.8+</span>
+                    <span class="tag is-info">PyTorch</span>
+                    <span class="tag is-success">NumPy</span>
+                    <span class="tag is-warning">SciPy</span>
+                    <span class="tag is-danger">Matplotlib</span>
+                    <span class="tag is-link">scikit-learn</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="column is-6">
+              <div class="box">
+                <h3 class="subtitle mb-4">
+                  <span class="icon-text">
+                    <span class="icon">
+                      <i class="fab fa-google"></i>
+                    </span>
+                    <span>Quick Start in Google Colab</span>
+                  </span>
+                </h3>
+                <p>We strongly encourage you to explore SINDy-SHRED by directly running our Colab notebook:</p>
+                <a href="https://colab.research.google.com/drive/1Xxw3P_x9a8iKZ6RPe2ZfTb8rJoWtPwTK?usp=sharing" class="button is-primary">
+                  <span class="icon"><i class="fab fa-google"></i></span>
+                  <span>Open in Colab</span>
+                </a>
+              </div>
+            </div>
+            
+            <div class="column is-12">
+              <div class="box">
+                <h3 class="subtitle mb-4">
+                  <span class="icon-text">
+                    <span class="icon">
+                      <i class="fas fa-download"></i>
+                    </span>
+                    <span>Dataset</span>
+                  </span>
+                </h3>
+                <p>Please download the dataset and place it into the Data/ folder:</p>
+                <a href="https://drive.google.com/file/d/1IrKFsYEcUL8xxZ0PUSLC3VrpTvVneDhj/view?usp=sharing" class="button is-success">
+                  <span class="icon"><i class="fas fa-download"></i></span>
+                  <span>Download Dataset</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="usage">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-four-fifths">
+        <div class="content">
+          <h2 class="title">Usage</h2>
+          
+          <div class="box">
+            <h3 class="subtitle">Video Tutorial</h3>
+            <div class="mb-3 has-text-centered">
+              <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1rem;">
+                <iframe 
+                  src="https://www.youtube.com/embed/UYDfWJxvKGw" 
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <p class="has-text-grey is-size-7">Video tutorial to learn about SINDy-SHRED</p>
+            </div>
+          </div>
+          
+          <div class="box">
+            <h3 class="subtitle">Interactive Examples</h3>
+            <div class="tabs is-boxed">
+              <ul>
+                <li class="is-active" data-target="#training"><a>Training</a></li>
+                <li data-target="#model-setup"><a>Model Setup</a></li>
+                <li data-target="#data-preprocessing"><a>Data Preprocessing</a></li>
+              </ul>
+            </div>
+            
+            <div class="tabs-content">
+              <div id="training" class="tab-content is-active">
+                <pre><code class="python">
+import sindy_shred
+validation_errors = sindy_shred.fit(
+    shred,
+    train_dataset,
+    valid_dataset,
+    batch_size=128,
+    num_epochs=600,
+    lr=1e-3,
+    verbose=True,
+    threshold=0.25,
+    patience=5,
+    sindy_regularization=10.0,
+    optimizer="AdamW",
+    thres_epoch=100
+)
+
+print(f"Final validation error: {validation_errors[-1]:.6f}")
+                </code></pre>
+              </div>
+              
+              <div id="model-setup" class="tab-content">
+                <pre><code class="python">
+# Import required libraries
+latent_dim = 3
+poly_order = 3
+include_sine = False
+library_dim = sindy.library_size(latent_dim, poly_order, include_sine, True)
+
+# Initialize SINDy-SHRED model
+shred = sindy_shred.SINDy_SHRED(
+    num_sensors=num_sensors,
+    m=m,  # Full state dimension
+    hidden_size=latent_dim,
+    hidden_layers=2,
+    l1=350,
+    l2=400,
+    dropout=0.1,
+    library_dim=library_dim,
+    poly_order=poly_order,
+    include_sine=include_sine,
+    dt=1/52.0*0.1,
+    layer_norm=False
+).to(device)
+                </code></pre>
+              </div>
+              
+              <div id="data-preprocessing" class="tab-content">
+                <pre><code class="python">
+# Import required libraries
+import numpy as np
+from processdata import load_data, TimeSeriesDataset
+import torch
+from sklearn.preprocessing import MinMaxScaler
+import os
+
+# Set up device and parameters
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+num_sensors = 250
+lags = 52
+
+# Load and preprocess data
+load_X = load_data('SST')
+n, m = load_X.shape
+sensor_locations = np.random.choice(m, size=num_sensors, replace=False)
+
+# Split data into train/valid/test
+train_indices = np.arange(0, 1000)
+mask = np.ones(n - lags)
+mask[train_indices] = 0
+valid_test_indices = np.arange(0, n - lags)[np.where(mask!=0)[0]]
+valid_indices = valid_test_indices[:30]
+test_indices = valid_test_indices[30:]
+
+# Scale the data
+sc = MinMaxScaler()
+sc = sc.fit(load_X[train_indices])
+transformed_X = sc.transform(load_X)
+
+# Generate input sequences
+all_data_in = np.zeros((n - lags, lags, num_sensors))
+for i in range(len(all_data_in)):
+    all_data_in[i] = transformed_X[i:i+lags, sensor_locations]
+
+# Create datasets
+train_data_in = torch.tensor(all_data_in[train_indices], dtype=torch.float32).to(device)
+valid_data_in = torch.tensor(all_data_in[valid_indices], dtype=torch.float32).to(device)
+test_data_in = torch.tensor(all_data_in[test_indices], dtype=torch.float32).to(device)
+
+train_data_out = torch.tensor(transformed_X[train_indices + lags - 1], dtype=torch.float32).to(device)
+valid_data_out = torch.tensor(transformed_X[valid_indices + lags - 1], dtype=torch.float32).to(device)
+test_data_out = torch.tensor(transformed_X[test_indices + lags - 1], dtype=torch.float32).to(device)
+
+train_dataset = TimeSeriesDataset(train_data_in, train_data_out)
+valid_dataset = TimeSeriesDataset(valid_data_in, valid_data_out)
+test_dataset = TimeSeriesDataset(test_data_in, test_data_out)
+                </code></pre>
+              </div>
+            </div>
+          </div>
+          
+          <div class="notification is-info is-light mt-5">
+            <p><strong>Note:</strong> For a step-by-step guide, please check out our <a href="https://colab.research.google.com/drive/1Xxw3P_x9a8iKZ6RPe2ZfTb8rJoWtPwTK?usp=sharing" target="_blank">Google Colab notebook</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-four-fifths">
+        <div class="content">
+          <h2 class="title">Frequently Asked Questions</h2>
+          
+          <div class="faq-container">
+            <div class="accordion">
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <div class="accordion-title">
+                    What are the key advantages of SINDy-SHRED over traditional methods?
+                  </div>
+                  <div class="accordion-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                  </div>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-body">
+                    <p>SINDy-SHRED offers several key advantages over traditional methods:</p>
+                    <ul class="faq-list">
+                      <li><i class="fas fa-check"></i> Robust and sample-efficient joint discovery of governing equations and coordinate systems</li>
+                      <li><i class="fas fa-check"></i> Observation purely from video recordings without further insights into the system</li>
+                      <li><i class="fas fa-check"></i> Mesh-free sensor placement without knowing the exact structure between sensors</li>
+                      <li><i class="fas fa-check"></i> Lightweight architecture requiring only very sparse sensor measurements</li>
+                      <li><i class="fas fa-check"></i> Eliminating the need for extensive hyperparameter tuning</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <div class="accordion-title">
+                    How do I choose the number of sensors and their placement?
+                  </div>
+                  <div class="accordion-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                  </div>
+                </div>
+                <div class="accordion-content">
+                  <div class="accordion-body">
+                    <p>For D-dimensional fields, SINDy-SHRED requires only D+1 sensors for disambiguation of the spatiotemporal field, similar to localization in cellular networks. However, to get a stable latent space, we recommend using around 0.5% of the total number of sensors.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="citation">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <div class="content">
+          <h2 class="title">Citation</h2>
+          <p>If you find SINDy-SHRED useful in your research, please cite:</p>
+          <pre><code>@misc{gao2025sparse,
+      title={Sparse identification of nonlinear dynamics and Koopman operators with Shallow Recurrent Decoder Networks}, 
+      author={Mars Liyao Gao and Jan P. Williams and J. Nathan Kutz},
+      year={2025},
+      eprint={2501.13329},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2501.13329}, 
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the <a href="https://advtok.github.io/">Adversarial Tokenization project page</a>.
+            The playground is based on <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground/">Xenova/the-tokenizer-playground</a>.
+            This website is licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+            You are free to borrow source code of this website, we just ask that you remove the analystics code in the header and link back to this page in the footer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Updated JS with additional interactive functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tabs li');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(item => item.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        
+        const target = document.querySelector(tab.dataset.target);
+        tabContents.forEach(content => content.classList.remove('is-active'));
+        target.classList.add('is-active');
+      });
+    });
+    
+    // Animated counting for statistics
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-target'));
+      const count = function() {
+        const current = parseInt(counter.innerText);
+        const increment = Math.ceil(target / 100);
+        if(current < target) {
+          counter.innerText = current + increment;
+          setTimeout(count, 10);
+        } else {
+          counter.innerText = target;
+        }
+      };
+      count();
+    });
+    
+    // Back to top button
+    const backToTopButton = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add('show');
+      } else {
+        backToTopButton.classList.remove('show');
+      }
+    });
+    
+    backToTopButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Accordion functionality
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+    accordionHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const accordionContent = header.nextElementSibling;
+        
+        // Toggle current item
+        header.classList.toggle('is-active');
+        if (accordionContent.classList.contains('show')) {
+          accordionContent.classList.remove('show');
+        } else {
+          accordionContent.classList.add('show');
+        }
+      });
+    });
+    
+    // Interactive architecture diagram
+    const hotspots = document.querySelectorAll('.hotspot');
+    
+    hotspots.forEach(hotspot => {
+      const infoId = hotspot.getAttribute('data-info') + '-info';
+      const infoBox = document.getElementById(infoId);
+      
+      hotspot.addEventListener('mouseenter', () => {
+        // Position the info box
+        const rect = hotspot.getBoundingClientRect();
+        infoBox.style.top = `${rect.top - 10 - infoBox.offsetHeight}px`;
+        infoBox.style.left = `${rect.left - (infoBox.offsetWidth / 2) + 10}px`;
+        infoBox.style.display = 'block';
+      });
+      
+      hotspot.addEventListener('mouseleave', () => {
+        infoBox.style.display = 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html> 
